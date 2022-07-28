@@ -45,34 +45,6 @@ BUILD_RTTI="OFF"           ## rtti switch
 BUILD_EXCEPTIONS="OFF"     ## exceptions switch
 PROJECT_NAME="sample"      ## 项目名称
 
-# 公用FLAGS
-COMMON_C_FLAGS="$COMMON_C_FLAGS "
-COMMON_CXX_FLAGS="$COMMON_CXX_FLAGS "
-
-# 公用FLAGS_RELEASE, 可根据实际项目需求增加-Ofast、-O3、-O2等选项, release默认-Os
-COMMON_C_FLAGS_RELEASE="$COMMON_C_FLAGS_RELEASE "
-COMMON_CXX_FLAGS_RELEASE="$COMMON_CXX_FLAGS_RELEASE "
-
-# hidden symbol
-if [ "$BUILD_HIDDEN_SYMBOL" != "OFF" ]; then
-    COMMON_C_FLAGS="$COMMON_C_FLAGS -fvisibility=hidden"
-    COMMON_CXX_FLAGS="$COMMON_CXX_FLAGS -fvisibility=hidden -fvisibility-inlines-hidden"
-fi
-
-# rtti
-if [ "$BUILD_RTTI" != "OFF" ]; then
-    COMMON_CXX_FLAGS="$COMMON_CXX_FLAGS -frtti"
-else
-    COMMON_CXX_FLAGS="$COMMON_CXX_FLAGS -fno-rtti"
-fi
-
-# excepitons
-if [ "$BUILD_EXCEPTIONS" != "OFF" ]; then
-    COMMON_CXX_FLAGS="$COMMON_CXX_FLAGS -fexceptions"
-else
-    COMMON_CXX_FLAGS="$COMMON_CXX_FLAGS -fno-exceptions"
-fi
-
 COMMON_CMAKE_ARGS=("${ASSIGNED_CMAKE_ARGS[@]}")
 COMMON_CMAKE_ARGS+=("-DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK/build/cmake/android.toolchain.cmake") # 使用NDK r21e以上版本
 COMMON_CMAKE_ARGS+=("-DANDROID_NDK=$ANDROID_NDK")
@@ -96,11 +68,6 @@ do_build()
         CMAKE_ARGS+=("-DANDROID_TOOLCHAIN=clang")
         CMAKE_ARGS+=("-DANDROID_PLATFORM=android-21")
     fi
-
-    CMAKE_ARGS+=("-DCMAKE_C_FLAGS=$COMMON_C_FLAGS")
-    CMAKE_ARGS+=("-DCMAKE_CXX_FLAGS=$COMMON_CXX_FLAGS")
-    CMAKE_ARGS+=("-DCMAKE_C_FLAGS_RELEASE=$COMMON_C_FLAGS_RELEASE")
-    CMAKE_ARGS+=("-DCMAKE_CXX_FLAGS_RELEASE=$COMMON_CXX_FLAGS_RELEASE")
 
     # 编译安装目录
     if [ "$BUILD_BASE_DIR" = "" ]; then
