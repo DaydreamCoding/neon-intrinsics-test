@@ -2,8 +2,10 @@ cmake_minimum_required(VERSION 3.5)
 
 project(sample C CXX)
 
-# benchmark
-set(benchmark_DIR "${PROJECT_SOURCE_DIR}/3rdparty/libbenchmark")
-find_package(benchmark REQUIRED CONFIG)
+message(STATUS "ANDROID_NDK: " ${ANDROID_NDK})
+
+add_compile_options(-fsanitize=address)
+add_compile_options(-fno-omit-frame-pointer)
+add_link_options   (-fsanitize=address)
 
 add_subdirectory(test)

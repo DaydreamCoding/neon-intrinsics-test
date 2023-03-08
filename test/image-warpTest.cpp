@@ -1,9 +1,10 @@
 
-#include <benchmark/benchmark.h>
+#include <thread>
+#include <unistd.h>
 
 #include "WarpAffine.hpp"
 
-static void BM_WarpNCNN_C4(benchmark::State& state) {
+void WarpNCNN_C4() {
 
     constexpr int src_width = 1080;
     constexpr int src_height = 1440;
@@ -17,16 +18,25 @@ static void BM_WarpNCNN_C4(benchmark::State& state) {
     unsigned char *src_data = new unsigned char[src_width * src_height * 4]();
     unsigned char *dst_data = new unsigned char[dst_width * dst_height * 4]();
 
-    // Perform setup here
-    for (auto _ : state) {
-        WarpAffine::warpaffine_bilinear_c4(src_data, src_width, src_height, src_width * 4, dst_data, dst_width, dst_height, dst_width * 4, image_matrix);
-    }
+    WarpAffine::warpaffine_bilinear_c4(src_data, src_width, src_height, src_width * 4, dst_data, dst_width, dst_height, dst_width * 4, image_matrix);
 
     delete [] dst_data;
     delete [] src_data;
+
+    /**
+     * when use NDK R25c enable asan with thread, raise an error
+     * Device : xiaomi 13 T, Android-13
+     */
+    auto fun = []() {
+        printf("test thread\n");
+        usleep(0.5 * 1000 * 1000);
+    };
+    auto thread = std::thread(fun);
+    thread.join();
 }
 
-BENCHMARK(BM_WarpNCNN_C4)->Unit(benchmark::kMillisecond)->Iterations(10);
+int main() {
 
-// Run the benchmark
-BENCHMARK_MAIN();
+    WarpNCNN_C4();
+    return 0;
+}

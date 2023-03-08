@@ -60,11 +60,11 @@ do_build()
     CMAKE_ARGS+=("-DANDROID_ABI=$BUILD_ARCH")
     if [ "$BUILD_ARCH" == "armeabi-v7a" ]; then
         CMAKE_ARGS+=("-DANDROID_ARM_NEON=TRUE")
-        CMAKE_ARGS+=("-DANDROID_STL=c++_static")
+        CMAKE_ARGS+=("-DANDROID_STL=c++_shared")
         CMAKE_ARGS+=("-DANDROID_TOOLCHAIN=clang")
         CMAKE_ARGS+=("-DANDROID_PLATFORM=android-16")
     else
-        CMAKE_ARGS+=("-DANDROID_STL=c++_static")
+        CMAKE_ARGS+=("-DANDROID_STL=c++_shared")
         CMAKE_ARGS+=("-DANDROID_TOOLCHAIN=clang")
         CMAKE_ARGS+=("-DANDROID_PLATFORM=android-21")
     fi
